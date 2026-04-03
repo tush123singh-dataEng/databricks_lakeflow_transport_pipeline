@@ -166,4 +166,4 @@ jupyter notebook notebooks/lakeflow_transport_pipeline.ipynb
 
 ---
 
-*Built as part of the Databricks Lakeflow Spark Declarative Pipelines micro-course.*
+
