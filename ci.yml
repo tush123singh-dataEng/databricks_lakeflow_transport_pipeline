@@ -1,0 +1,41 @@
+name: Pipeline Validation
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install pyspark==3.5.0 delta-spark==3.1.0 nbformat jupyter
+
+      - name: Validate notebook structure
+        run: |
+          python -c "
+          import nbformat, sys
+          nb = nbformat.read('notebooks/lakeflow_transport_pipeline.ipynb', as_version=4)
+          print(f'✅ Notebook valid — {len(nb.cells)} cells found')
+          "
+
+      - name: Validate pipeline config
+        run: |
+          python -c "
+          import json
+          with open('configs/pipeline_config.json') as f:
+              cfg = json.load(f)
+          assert 'name' in cfg and 'libraries' in cfg
+          print(f'✅ Pipeline config valid: {cfg[\"name\"]}')
+          "

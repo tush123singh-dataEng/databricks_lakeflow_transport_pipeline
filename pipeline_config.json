@@ -1,0 +1,40 @@
+{
+  "name": "urban-transportation-lakeflow-pipeline",
+  "description": "End-to-end transportation domain pipeline using Databricks Lakeflow (Spark Declarative Pipelines) with Medallion Architecture",
+  "edition": "ADVANCED",
+  "development": true,
+  "continuous": false,
+  "channel": "CURRENT",
+  "clusters": [
+    {
+      "label": "default",
+      "autoscale": {
+        "min_workers": 1,
+        "max_workers": 4,
+        "mode": "LEGACY"
+      },
+      "spark_conf": {
+        "spark.databricks.delta.preview.enabled": "true"
+      }
+    }
+  ],
+  "libraries": [
+    {
+      "notebook": {
+        "path": "/Repos/<your-username>/lakeflow-transport-pipeline/notebooks/lakeflow_transport_pipeline"
+      }
+    }
+  ],
+  "target": "transportation",
+  "catalog": "main",
+  "configuration": {
+    "landing_path"   : "/mnt/landing/transportation",
+    "checkpoint_path": "/mnt/checkpoints/transportation",
+    "pipeline_env"   : "dev"
+  },
+  "filters": {
+    "include": ["bronze_*", "silver_*", "gold_*"]
+  },
+  "photon": true,
+  "storage": "dbfs:/pipelines/transportation"
+}
